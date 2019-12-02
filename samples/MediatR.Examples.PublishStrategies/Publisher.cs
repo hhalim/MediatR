@@ -78,7 +78,19 @@ namespace MediatR.Examples.PublishStrategies
         {
             foreach (var handler in handlers)
             {
-                Task.Run(() => handler(notification, cancellationToken));
+                Task.Run(() => handler(notification, cancellationToken))
+                    .ContinueWith( (t) =>
+                        {
+                            if (t.IsFaulted)
+                            {
+                                //log each exception stack trace!
+                                foreach (var exc in ((AggregateException)t.Exception).Flatten().InnerExceptions)
+                                {
+                                    //Log(exc.ToString());
+                                }
+                            }
+                        }, TaskContinuationOptions.OnlyOnFaulted
+                    );
             }
 
             return Task.CompletedTask;
