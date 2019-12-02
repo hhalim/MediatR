@@ -87,6 +87,7 @@ namespace MediatR.Examples.PublishStrategies
                                 foreach (var exc in ((AggregateException)t.Exception).Flatten().InnerExceptions)
                                 {
                                     //Log(exc.ToString());
+                                    Console.WriteLine(exc.ToString());
                                 }
                             }
                         }, TaskContinuationOptions.OnlyOnFaulted
